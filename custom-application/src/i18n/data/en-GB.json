@@ -1,0 +1,16 @@
+{
+  "Channels.noResults": "There are no channels available in this project.",
+  "Channels.title": "Channels list",
+  "Welcome.aboutContent": "This Custom Application has some built-in functionalities for demo purposes to help you getting started. For example, the <linkchannels>Channels page</linkchannels> fetches channels from the commercetools platform and renders them in a table.",
+  "Welcome.aboutTitle": "About the starter template",
+  "Welcome.gettingStartedContent": "If this is the first time building a Custom Application, we recommend to <linkdocs>read the documentation</linkdocs> and get familiar with the tools and concepts behind it.",
+  "Welcome.gettingStartedTitle": "Read the documentation",
+  "Welcome.cardChannelsTitle": "Fetching channels",
+  "Welcome.subtitle": "Welcome to Custom Applications! To get started, inspect the source code to get familiar with the setup, the folder structure, the development tools, etc. and read the README file for additional information.",
+  "Welcome.title": "Develop applications for the Merchant Center",
+  "Welcome.cardDocumentationTitle": "Documentation",
+  "Welcome.cardDesignSystemContent": "Explore the UI components to develop Custom Applications and learn more about the Design System.",
+  "Welcome.cardChannelsContent": "Demo example to fetch some data using GraphQL and displaying it in a paginated table.",
+  "Welcome.cardDocumentationContent": "Learn more about Custom Applications.",
+  "Welcome.cardDesignSystemTitle": "Design System"
+}
