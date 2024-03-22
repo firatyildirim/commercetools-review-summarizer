@@ -1,0 +1,27 @@
+query FetchProductDetails(
+  $projectExpandedProducts: Boolean = false
+  $localeProjection: [Locale!]
+  $sku: String
+  $variantKey: String
+  $id: String
+  $key: String
+) {
+  product(
+    projectExpandedProducts: $projectExpandedProducts
+    localeProjection: $localeProjection
+    sku: $sku
+    variantKey: $variantKey
+    id: $id
+    key: $key
+  ) {
+    id
+    masterData {
+      current {
+        nameAllLocales {
+          locale
+          value
+        }
+      }
+    }
+  }
+}

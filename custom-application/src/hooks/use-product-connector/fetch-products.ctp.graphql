@@ -1,0 +1,25 @@
+query FetchProductDetails(
+	$where: String
+  $sort: [String!]
+  $limit: Int
+  $offset: Int
+  $skus: [String!]
+  $locale: Locale!
+) {
+  products(
+  where: $where
+  sort: $sort
+  limit: $limit
+  offset: $offset
+  skus: $skus
+  ) {
+    results {
+      id
+      masterData {
+        current {
+          name(locale: $locale)
+        }
+      }
+    }
+  }
+}

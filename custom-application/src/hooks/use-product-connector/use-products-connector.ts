@@ -5,42 +5,43 @@ import type { ApolloError } from '@apollo/client';
 import { useMcQuery } from '@commercetools-frontend/application-shell';
 import { GRAPHQL_TARGETS } from '@commercetools-frontend/constants';
 import type {
-  Maybe,
-  TCustomObject,
   TQuery,
-  TQuery_CustomObjectArgs,
-  TQuery_CustomObjectsArgs,
+  TQuery_ProductArgs,
+  TQuery_ProductsArgs
 } from '../../types/generated/ctp';
-import FetchCustomObjectDetailsQuery from './fetch-custom-object-details.ctp.graphql';
-import FetchCustomObjectsQuery from './fetch-custom-objects.ctp.graphql';
+import FetchProductDetailsQuery from './fetch-product-details.ctp.graphql';
+import FetchProductsQuery from './fetch-products.ctp.graphql';
 import type { TDataTableSortingState } from '@commercetools-uikit/hooks';
 
 type PaginationAndSortingProps = {
-  container: string,
+  where: string,
+  skus: Array<string>,
   page: { value: number };
   perPage: { value: number };
   tableSorting: TDataTableSortingState;
 };
-type TUseCustomObjectsFetcher = (
+type TUseProductsFetcher = (
   paginationAndSortingProps: PaginationAndSortingProps
 ) => {
-  customObjects?: TQuery['customObjects'];
+  products?: TQuery['products'];
   error?: ApolloError;
   loading: boolean;
 };
 
-export const useCustomObjectsFetcher: TUseCustomObjectsFetcher = ({
-  container,
+export const useProductsFetcher: TUseProductsFetcher = ({
+  where,
+  skus,
   page,
   perPage,
   tableSorting,
 }) => {
   const { data, error, loading } = useMcQuery<
     TQuery, // data
-    TQuery_CustomObjectsArgs
-  >(FetchCustomObjectsQuery, {
+    TQuery_ProductsArgs
+  >(FetchProductsQuery, {
     variables: {
-      container,
+      where,
+      skus,
       limit: perPage.value,
       offset: (page.value - 1) * perPage.value,
       sort: [`${tableSorting.value.key} ${tableSorting.value.order}`],
@@ -51,27 +52,28 @@ export const useCustomObjectsFetcher: TUseCustomObjectsFetcher = ({
   });
 
   return {
-    customObjects: data?.customObjects,
+    products: data?.products,
     error,
     loading,
   };
 };
 
-type TUseCustomObjectDetailsFetcher = (
-  variables : TQuery_CustomObjectArgs
+
+type TUseProductDetailsFetcher = (
+  variables : TQuery_ProductArgs
 ) => {
-  customObject?: Maybe<TCustomObject>;
+  product?: TQuery['product'];
   error?: ApolloError;
   loading: boolean;
 };
 
-export const useCustomObjectDetailsFetcher: TUseCustomObjectDetailsFetcher = (
-  variables: TQuery_CustomObjectArgs
+export const useProductDetailsFetcher: TUseProductDetailsFetcher = (
+  variables: TQuery_ProductArgs
 ) => {
   const { data, error, loading } = useMcQuery<
     TQuery, // data
-    TQuery_CustomObjectArgs
-  >(FetchCustomObjectDetailsQuery, {
+    TQuery_ProductArgs
+  >(FetchProductDetailsQuery, {
     variables,
     context: {
       target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
@@ -79,7 +81,7 @@ export const useCustomObjectDetailsFetcher: TUseCustomObjectDetailsFetcher = (
   });
 
   return {
-    customObject: data?.customObject,
+    product: data?.product,
     error,
     loading,
   };

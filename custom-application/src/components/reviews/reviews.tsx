@@ -12,38 +12,36 @@ import messages from './messages';
 import Constraints from '@commercetools-uikit/constraints';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
 import { useDataTableSortingState, usePaginationState } from '@commercetools-uikit/hooks';
-import DataTable from '@commercetools-uikit/data-table';
-import { TQuery } from '../../types/generated/ctp';
+import DataTable, { TColumn } from '@commercetools-uikit/data-table';
 import ReviewDetails from '../review-details';
 import { SuspendedRoute } from '@commercetools-frontend/application-shell';
+import { TReviewCustomObject, TReviewsProps } from '../../types/review';
+import { Pagination } from '@commercetools-uikit/pagination';
+import ItemRenderer from './reviews-item-renderer';
 
-const columns = [
-  { key: 'product_name', label: 'Product Name' },
-  { key: 'createdAt', label: 'Review Generation Date', isSortable: true },
-  { key: 'lastModifiedAt', label: 'State', isSortable: true },
+const CONTAINER = 'reviews-container';
+
+const columns: Array<TColumn> = [
+  { key: 'productName', label: 'Product Name' },
+  { key: 'lastModifiedAt', label: 'Review Generation Date', isSortable: true },
+  { key: 'state', label: 'State' },
 ];
 
-type TReviewProps = {
-  linkToWelcome: string;
-};
-
-const Reviews = (props: TReviewProps) => {
-  const intl = useIntl();
-
-  const match = useRouteMatch();
-  const { push } = useHistory();
+const Reviews = (props: TReviewsProps) => {
 
   useApplicationContext((context) => ({
     dataLocale: context.dataLocale,
     projectLanguages: context.project?.languages,
   }));
 
+  const intl = useIntl();
+  const match = useRouteMatch();
+  const { push } = useHistory();
   const { page, perPage } = usePaginationState();
-
   const tableSorting = useDataTableSortingState({ key: 'key', order: 'asc' });
 
-  const { customObjectsPaginatedResult, error, loading } = useCustomObjectsFetcher({
-    container: 'reviews-container',
+  const { customObjects: reviews, error, loading } = useCustomObjectsFetcher({
+    container: CONTAINER,
     page,
     perPage,
     tableSorting,
@@ -68,46 +66,43 @@ const Reviews = (props: TReviewProps) => {
         />
         <Text.Headline as="h2" intlMessage={messages.title} />
       </Spacings.Stack>
+
       <Constraints.Horizontal max={'auto'}>
         <ContentNotification type="info">
           <Text.Body intlMessage={messages.demoHint} />
         </ContentNotification>
       </Constraints.Horizontal>
+
       {loading && <LoadingSpinner />}
 
-      {customObjectsPaginatedResult ? (
+      {reviews ? (
         <Spacings.Stack scale="l">
-          {
-          // JSON.stringify(customObjectsPaginatedResult)
-          }
-          <DataTable<NonNullable<TQuery['customObjects']['results']>[0]>
+          <DataTable<NonNullable<TReviewCustomObject[]>[0]>
             isCondensed
             columns={columns}
-            rows={customObjectsPaginatedResult.results}
-            itemRenderer={(item, column) => {
-              switch (column.key) {
-                case 'product_name':
-                  return item.value;
-                case 'createdAt':
-                  return item.createdAt;
-                case 'state':
-                  return item.key;
-                default:
-                  return null;
-              }
-            }}
+            rows={(reviews['results'] as TReviewCustomObject[])}
+            itemRenderer={ItemRenderer}
             sortedBy={tableSorting.value.key}
             sortDirection={tableSorting.value.order}
             onSortChange={tableSorting.onChange}
             onRowClick={(row) => push(`${match.url}/${row.id}`)}
           />
+
+          <Pagination
+            page={page.value}
+            onPageChange={page.onChange}
+            perPage={perPage.value}
+            onPerPageChange={perPage.onChange}
+            totalItems={reviews.total}
+          />
+
+          <Switch>
+            <SuspendedRoute path={`${match.url}/:id`}>
+              <ReviewDetails onClose={() => push(`${match.url}`)} />
+            </SuspendedRoute>
+          </Switch>
         </Spacings.Stack>
       ) : null}
-      <Switch>
-        <SuspendedRoute path={`${match.url}/:id`}>
-          <ReviewDetails onClose={() => push(`${match.url}`)} />
-        </SuspendedRoute>
-      </Switch>
     </Spacings.Stack>
   );
 };

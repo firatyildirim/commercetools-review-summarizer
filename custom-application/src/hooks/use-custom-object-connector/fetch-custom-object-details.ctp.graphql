@@ -1,12 +1,15 @@
 query FetchCustomObjectDetails(
-  $container: String!,
-  $key: String!
+  $container: String,
+  $key: String
+  $id: String
 ) {
   customObject(
     container: $container, 
     key: $key
+    id: $id
   ) {
     container
+    id
     key
     value
   }
