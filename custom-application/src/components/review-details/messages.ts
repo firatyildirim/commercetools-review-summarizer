@@ -1,21 +1,48 @@
 import { defineMessages } from 'react-intl';
 
 export default defineMessages({
-  backToWelcome: {
-    id: 'Reviews.backToWelcome',
-    defaultMessage: 'Back to Welcome page',
+  summarizedReviews: {
+    id: 'ReviewDetails.summarizedReviews',
+    defaultMessage: 'Summarized reviews',
   },
-  title: {
-    id: 'Reviews.title',
-    defaultMessage: 'Review list',
+  confirm: {
+    id: 'ReviewDetails.confirm',
+    defaultMessage: 'Confirm',
   },
-  demoHint: {
-    id: 'Reviews.demoHint',
-    defaultMessage:
-      'The following table appears to contain data related to product reviews or confirmations awaiting review.',
+  reject: {
+    id: 'ReviewDetails.reject',
+    defaultMessage: 'Reject',
   },
-  noResults: {
-    id: 'Reviews.noResults',
-    defaultMessage: 'There are no reviews yet.',
+  cancel: {
+    id: 'ReviewDetails.cancel',
+    defaultMessage: 'Cancel',
   },
+  reviewUpdated: {
+    id: 'ReviewDetails.reviewUpdated',
+    defaultMessage: 'Review update succeed',
+  },
+  apiErrorMessage: {
+    id: 'ReviewDetails.apiErrorMessage',
+    defaultMessage: 'Sorry, an unexpected error occured!',
+  },
+  goToProduct: {
+    id: 'ProductDetails.goToProduct',
+    defaultMessage: 'Go to Product',
+  },
+  productInformation: {
+    id: 'ProductDetails.productInformation',
+    defaultMessage: 'Product information',
+  },
+  productName: {
+    id: 'ProductDetails.productName',
+    defaultMessage: 'Product name',
+  },
+  description: {
+    id: 'ProductDetails.description',
+    defaultMessage: 'Description',
+  },
+  skus: {
+    id: 'ProductDetails.skus',
+    defaultMessage: 'SKUS',
+  }
 });

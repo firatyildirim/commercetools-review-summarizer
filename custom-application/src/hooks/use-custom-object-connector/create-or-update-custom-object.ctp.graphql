@@ -1,16 +1,12 @@
-mutation UpdateCustomObject(
-  $channelId: String!
-  $version: Long!
-  $actions: [ChannelUpdateAction!]!
+mutation CreateOrUpdateCustomObject(
+  $draft: CustomObjectDraft!
 ) {
-  updateChannel(id: $channelId, version: $version, actions: $actions) {
+  createOrUpdateCustomObject(
+    draft: $draft
+  ) {
+    container
     id
-    version
     key
-    roles
-    nameAllLocales {
-      locale
-      value
-    }
+    value
   }
 }

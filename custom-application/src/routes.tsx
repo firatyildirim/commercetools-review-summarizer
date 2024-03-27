@@ -1,14 +1,12 @@
 import type { ReactNode } from 'react';
-import { Switch, Route, useRouteMatch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Spacings from '@commercetools-uikit/spacings';
 import Reviews from './components/reviews';
-import Welcome from './components/welcome';
 
 type ApplicationRoutesProps = {
   children?: ReactNode;
 };
 const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
-  const match = useRouteMatch();
 
   /**
    * When using routes, there is a good chance that you might want to
@@ -24,11 +22,8 @@ const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
   return (
     <Spacings.Inset scale="l">
       <Switch>
-        <Route path={`${match.path}/reviews`}>
-          <Reviews linkToWelcome={match.url} />
-        </Route>
         <Route>
-          <Welcome />
+          <Reviews />
         </Route>
       </Switch>
     </Spacings.Inset>

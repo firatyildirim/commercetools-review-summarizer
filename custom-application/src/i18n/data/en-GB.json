@@ -12,5 +12,20 @@
   "Welcome.cardDesignSystemContent": "Explore the UI components to develop Custom Applications and learn more about the Design System.",
   "Welcome.cardChannelsContent": "Demo example to fetch some data using GraphQL and displaying it in a paginated table.",
   "Welcome.cardDocumentationContent": "Learn more about Custom Applications.",
-  "Welcome.cardDesignSystemTitle": "Design System"
+  "Welcome.cardDesignSystemTitle": "Design System",
+  "ReviewDetails.confirm": "Confirm",
+  "ReviewDetails.reject": "Reject",
+  "ReviewDetails.summarizedReviews": "Summarized reviews",
+  "ReviewDetails.cancel": "Cancel",
+  "ReviewDetails.reviewUpdated": "Review update succeed",
+  "ReviewDetails.apiErrorMessage": "Sorry, an unexpected error occured!",
+  "ProductDetails.goToProduct": "Go to Product",
+  "ProductDetails.productInformation": "Product information",
+  "ProductDetails.productName": "Product name", 
+  "ProductDetails.description": "Description", 
+  "ProductDetails.skus": "SKUS", 
+  "Reviews.backToWelcome": "Back to Welcome page",
+  "Reviews.demoHint": "The following table appears to contain data related to product reviews or confirmations awaiting review.",
+  "Reviews.title": "Reviews list",
+  "Reviews.noResults": "There are no reviews yet."
 }

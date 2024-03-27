@@ -15,11 +15,17 @@ query FetchProductDetails(
     key: $key
   ) {
     id
+    skus
     masterData {
       current {
         nameAllLocales {
           locale
           value
+        }
+        masterVariant {
+          images {
+            url
+          }
         }
       }
     }

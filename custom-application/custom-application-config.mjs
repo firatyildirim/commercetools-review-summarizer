@@ -26,14 +26,7 @@ const config = {
     labelAllLocales: [],
     permissions: [PERMISSIONS.View],
   },
-  submenuLinks: [
-    {
-      uriPath: 'reviews',
-      defaultLabel: 'Reviews',
-      labelAllLocales: [],
-      permissions: [PERMISSIONS.View],
-    },
-  ],
+  submenuLinks: [],
 };
 
 export default config;

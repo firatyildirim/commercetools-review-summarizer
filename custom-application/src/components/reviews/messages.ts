@@ -7,7 +7,7 @@ export default defineMessages({
   },
   title: {
     id: 'Reviews.title',
-    defaultMessage: 'Review list',
+    defaultMessage: 'Reviews list',
   },
   demoHint: {
     id: 'Reviews.demoHint',

@@ -2,18 +2,23 @@
 /// <reference path="../../../@types-extensions/graphql-ctp/index.d.ts" />
 
 import type { ApolloError } from '@apollo/client';
-import { useMcQuery } from '@commercetools-frontend/application-shell';
+import { useMcMutation, useMcQuery } from '@commercetools-frontend/application-shell';
 import { GRAPHQL_TARGETS } from '@commercetools-frontend/constants';
+
 import type {
   Maybe,
   TCustomObject,
+  TCustomObjectDraft,
+  TMutation_CreateOrUpdateCustomObjectArgs,
   TQuery,
   TQuery_CustomObjectArgs,
   TQuery_CustomObjectsArgs,
 } from '../../types/generated/ctp';
 import FetchCustomObjectDetailsQuery from './fetch-custom-object-details.ctp.graphql';
 import FetchCustomObjectsQuery from './fetch-custom-objects.ctp.graphql';
+import CreateOrUpdateCustomObject from './create-or-update-custom-object.ctp.graphql';
 import type { TDataTableSortingState } from '@commercetools-uikit/hooks';
+import { extractErrorFromGraphQlResponse } from '../../helpers';
 
 type PaginationAndSortingProps = {
   container: string,
@@ -82,5 +87,36 @@ export const useCustomObjectDetailsFetcher: TUseCustomObjectDetailsFetcher = (
     customObject: data?.customObject,
     error,
     loading,
+  };
+};
+
+export const useCustomObjectCreaterOrDeleter = () => {
+  const [createOrUpdateCustomObject, { loading }] = useMcMutation<
+    TCustomObjectDraft,
+    TMutation_CreateOrUpdateCustomObjectArgs
+  >(CreateOrUpdateCustomObject);
+
+  const execute = async ({
+    draft
+  }: {
+    draft: NonNullable<TMutation_CreateOrUpdateCustomObjectArgs['draft']>;
+  }) => {
+    try {
+      return await createOrUpdateCustomObject({
+        context: {
+          target: GRAPHQL_TARGETS.COMMERCETOOLS_PLATFORM,
+        },
+        variables: {
+          draft
+        },
+      });
+    } catch (graphQlResponse) {
+      throw extractErrorFromGraphQlResponse(graphQlResponse);
+    }
+  };
+
+  return {
+    loading,
+    execute,
   };
 };

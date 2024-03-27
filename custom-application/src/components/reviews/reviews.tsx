@@ -1,13 +1,10 @@
-import { useIntl } from 'react-intl';
 import { useApplicationContext } from '@commercetools-frontend/application-shell-connectors';
 import { ContentNotification } from '@commercetools-uikit/notifications';
 import Spacings from '@commercetools-uikit/spacings';
 import Text from '@commercetools-uikit/text';
 import { useCustomObjectsFetcher } from '../../hooks/use-custom-object-connector';
 import { getErrorMessage } from '../../helpers';
-import FlatButton from '@commercetools-uikit/flat-button';
-import { Link as RouterLink, Switch, useHistory, useRouteMatch } from 'react-router-dom';
-import { BackIcon } from '@commercetools-uikit/icons';
+import { Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import messages from './messages';
 import Constraints from '@commercetools-uikit/constraints';
 import LoadingSpinner from '@commercetools-uikit/loading-spinner';
@@ -15,7 +12,7 @@ import { useDataTableSortingState, usePaginationState } from '@commercetools-uik
 import DataTable, { TColumn } from '@commercetools-uikit/data-table';
 import ReviewDetails from '../review-details';
 import { SuspendedRoute } from '@commercetools-frontend/application-shell';
-import { TReviewCustomObject, TReviewsProps } from '../../types/review';
+import { TReviewCustomObject } from '../../types/review';
 import { Pagination } from '@commercetools-uikit/pagination';
 import ItemRenderer from './reviews-item-renderer';
 
@@ -27,14 +24,13 @@ const columns: Array<TColumn> = [
   { key: 'state', label: 'State' },
 ];
 
-const Reviews = (props: TReviewsProps) => {
+const Reviews = () => {
 
   useApplicationContext((context) => ({
     dataLocale: context.dataLocale,
     projectLanguages: context.project?.languages,
   }));
 
-  const intl = useIntl();
   const match = useRouteMatch();
   const { push } = useHistory();
   const { page, perPage } = usePaginationState();
@@ -58,12 +54,6 @@ const Reviews = (props: TReviewsProps) => {
   return (
     <Spacings.Stack scale="xl">
       <Spacings.Stack scale="xs">
-        <FlatButton
-          as={RouterLink}
-          to={props.linkToWelcome}
-          label={intl.formatMessage(messages.backToWelcome)}
-          icon={<BackIcon />}
-        />
         <Text.Headline as="h2" intlMessage={messages.title} />
       </Spacings.Stack>
 

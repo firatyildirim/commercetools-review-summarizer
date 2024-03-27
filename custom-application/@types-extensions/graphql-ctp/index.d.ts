@@ -1,6 +1,14 @@
 /* THIS IS A GENERATED FILE */
 /* eslint-disable import/no-duplicates */
 
+declare module '*/create-or-update-custom-object.ctp.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const FetchCustomObjectsQuery: DocumentNode;
+
+  export default defaultDocument;
+}
+
 declare module '*/fetch-product-details.ctp.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;
