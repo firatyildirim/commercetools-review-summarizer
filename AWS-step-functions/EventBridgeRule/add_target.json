@@ -1,0 +1,11 @@
+{
+    "Rule": "MyCronRule",
+    "Targets": [
+      {
+        "Id": "Target1",
+        "Arn": "arn:aws:states:eu-north-1:149146499132:stateMachine:MyStateMachine-5ehdsnlok",
+        "RoleArn": "arn:aws:iam::149146499132:role/service-role/Amazon_EventBridge_Invoke_Step_Functions_1630939040"
+      }
+    ]
+  }
+  

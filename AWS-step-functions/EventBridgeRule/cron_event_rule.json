@@ -1,0 +1,6 @@
+{
+    "Name": "MyCronRule",
+    "ScheduleExpression": "cron(0 * * * ? *)",
+    "Description": "Trigger Step Functions state machine every hour",
+    "State": "ENABLED"
+  }

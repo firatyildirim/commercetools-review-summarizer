@@ -1,0 +1,14 @@
+
+Step 1: Set Up AWS CLI and IAM Permissions
+Install AWS CLI: Ensure you have the AWS CLI installed and configured on your local machine. You can install it from https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html.
+
+Deploy the CloudWatch Event Rule: Use the AWS CLI to create the rule.
+aws events put-rule --cli-input-json file://cron_event_rule.json
+
+Use the put-targets command to add the target to the CloudWatch Event Rule:
+aws events put-targets --cli-input-json file://add_target.json
+
+Optional step:
+if you don't have permissions set up.Add Permissions for CloudWatch to Invoke Lambda: Add a permission to the Lambda function to allow CloudWatch Events to invoke it.
+aws lambda add-permission --function-name {functionName} --statement-id MyCronEvent --action 'lambda:InvokeFunction' --principal events.amazonaws.com --source-arn arn:aws:events:YOUR_REGION:YOUR_ACCOUNT_ID:rule/MyCronRule
+
