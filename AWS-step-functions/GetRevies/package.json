@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "deploy": "zip -r reviews.zip ./* && aws lambda update-function-code --function-name ct-ai-step-get-reviews --zip-file fileb://reviews.zip"
   },
   "keywords": [],
   "author": "",
