@@ -14,40 +14,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.handler = void 0;
 const node_fetch_1 = __importDefault(require("node-fetch"));
+require("dotenv/config");
 const sdk_client_v2_1 = require("@commercetools/sdk-client-v2");
 const platform_sdk_1 = require("@commercetools/platform-sdk");
-const projectKey = "ct-ai-exp";
-const scopes = ["manage_project:ct-ai-exp"];
-// Configure authMiddlewareOptions
+const projectKey = process.env.CTP_PROJECT_KEY;
+const scopes = [process.env.CTP_SCOPE];
 const authMiddlewareOptions = {
-    host: "https://auth.europe-west1.gcp.commercetools.com",
+    host: process.env.CTP_AUTH_URL,
     projectKey: projectKey,
     credentials: {
-        clientId: "3ROpu7YI28dltAii3qD9Dk5L",
-        clientSecret: "W4FclkO_lHn_LMOxuXo-dx7Beh0ZgW3n",
+        clientId: process.env.CTP_CLIENT_ID,
+        clientSecret: process.env.CTP_CLIENT_SECRET,
     },
     scopes,
     fetch: node_fetch_1.default,
 };
-// Configure httpMiddlewareOptions
 const httpMiddlewareOptions = {
-    host: "https://api.europe-west1.gcp.commercetools.com",
+    host: process.env.CTP_API_URL,
     fetch: node_fetch_1.default,
 };
-// Export the ClientBuilder
 const ctpClient = new sdk_client_v2_1.ClientBuilder()
-    .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
+    .withProjectKey(projectKey)
     .withClientCredentialsFlow(authMiddlewareOptions)
     .withHttpMiddleware(httpMiddlewareOptions)
-    .withLoggerMiddleware() // Include middleware for logging
+    .withLoggerMiddleware()
     .build();
 const apiRoot = (0, platform_sdk_1.createApiBuilderFromCtpClient)(ctpClient).withProjectKey({
     projectKey: projectKey,
 });
-// I need to get today's date and yesterday's date
-const today = new Date();
-const yesterday = new Date(today);
-yesterday.setDate(yesterday.getDate() - 1);
+function getFormattedTodayDate() {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    return today.toISOString();
+}
+function getFormattedYesterdayDate() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setUTCHours(0, 0, 0, 0);
+    return yesterday.toISOString();
+}
 const getReviewsAllRecentReviews = (startDate, endDate, productId) => {
     return apiRoot
         .reviews()
@@ -79,11 +84,7 @@ function getUniqueProductIds(reviewsMap) {
 var filteredReviews = [];
 const handler = (event, context) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Today:", today.toString());
-        console.log("Yesterday:", yesterday.toString());
-        // Customers query will be changed to get reviews query from Deniz
-        // const customers = await getCustomers(apiRoot);
-        const reviews = yield getReviews("2024-06-25T00:00:00.000Z", "2024-06-28T00:00:00.000Z", 500)
+        const reviews = yield getReviews(getFormattedYesterdayDate(), getFormattedTodayDate(), 500)
             .then((reviews) => {
             const reviewsMap = reviews.body.results.map((review) => {
                 return {

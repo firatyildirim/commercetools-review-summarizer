@@ -1,4 +1,5 @@
 import fetch from "node-fetch";
+import "dotenv/config";
 import {
   ClientBuilder,
   AuthMiddlewareOptions,
@@ -10,43 +11,53 @@ import {
   createApiBuilderFromCtpClient,
 } from "@commercetools/platform-sdk";
 
-const projectKey = "ct-ai-exp";
-const scopes = ["manage_project:ct-ai-exp"];
+const projectKey = process.env.CTP_PROJECT_KEY!;
+const scopes = [process.env.CTP_SCOPE!];
 
-// Configure authMiddlewareOptions
 const authMiddlewareOptions: AuthMiddlewareOptions = {
-  host: "https://auth.europe-west1.gcp.commercetools.com",
+  host: process.env.CTP_AUTH_URL!,
   projectKey: projectKey,
   credentials: {
-    clientId: "3ROpu7YI28dltAii3qD9Dk5L",
-    clientSecret: "W4FclkO_lHn_LMOxuXo-dx7Beh0ZgW3n",
+    clientId: process.env.CTP_CLIENT_ID!,
+    clientSecret: process.env.CTP_CLIENT_SECRET!,
   },
   scopes,
   fetch,
 };
 
-// Configure httpMiddlewareOptions
 const httpMiddlewareOptions: HttpMiddlewareOptions = {
-  host: "https://api.europe-west1.gcp.commercetools.com",
+  host: process.env.CTP_API_URL!,
   fetch,
 };
 
-// Export the ClientBuilder
 const ctpClient = new ClientBuilder()
-  .withProjectKey(projectKey) // .withProjectKey() is not required if the projectKey is included in authMiddlewareOptions
+  .withProjectKey(projectKey)
   .withClientCredentialsFlow(authMiddlewareOptions)
   .withHttpMiddleware(httpMiddlewareOptions)
-  .withLoggerMiddleware() // Include middleware for logging
+  .withLoggerMiddleware()
   .build();
 
 const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
   projectKey: projectKey,
 });
 
-// I need to get today's date and yesterday's date
-const today = new Date();
-const yesterday = new Date(today);
-yesterday.setDate(yesterday.getDate() - 1);
+function getFormattedTodayDate(): string {
+  const today = new Date();
+
+  today.setUTCHours(0, 0, 0, 0);
+
+  return today.toISOString();
+}
+
+function getFormattedYesterdayDate(): string {
+  const yesterday = new Date();
+
+  yesterday.setDate(yesterday.getDate() - 1);
+
+  yesterday.setUTCHours(0, 0, 0, 0);
+
+  return yesterday.toISOString();
+}
 
 const getReviewsAllRecentReviews = (
   startDate: string,
@@ -93,14 +104,9 @@ var filteredReviews = [];
 
 export const handler = async (event: any, context: any) => {
   try {
-    console.log("Today:", today.toString());
-    console.log("Yesterday:", yesterday.toString());
-    // Customers query will be changed to get reviews query from Deniz
-    // const customers = await getCustomers(apiRoot);
-
     const reviews = await getReviews(
-      "2024-06-25T00:00:00.000Z",
-      "2024-06-28T00:00:00.000Z",
+      getFormattedYesterdayDate(),
+      getFormattedTodayDate(),
       500
     )
       .then((reviews) => {
