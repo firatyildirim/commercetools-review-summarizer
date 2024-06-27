@@ -44,6 +44,8 @@ const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
 function getFormattedTodayDate(): string {
   const today = new Date();
 
+  today.setDate(today.getDate() + 2);
+
   today.setUTCHours(0, 0, 0, 0);
 
   return today.toISOString();
@@ -52,27 +54,12 @@ function getFormattedTodayDate(): string {
 function getFormattedYesterdayDate(): string {
   const yesterday = new Date();
 
-  yesterday.setDate(yesterday.getDate() - 1);
+  yesterday.setDate(yesterday.getDate() - 3);
 
   yesterday.setUTCHours(0, 0, 0, 0);
 
   return yesterday.toISOString();
 }
-
-const getReviewsAllRecentReviews = (
-  startDate: string,
-  endDate: string,
-  productId: string
-) => {
-  return apiRoot
-    .reviews()
-    .get({
-      queryArgs: {
-        where: `lastModifiedAt >= "${startDate}" and lastModifiedAt < "${endDate}" and target(typeId = "product" and id = "${productId}")`,
-      },
-    })
-    .execute();
-};
 
 const getReviews = (
   startDate: string,
@@ -94,13 +81,23 @@ const getReviews = (
     .execute();
 };
 
-function getUniqueProductIds(reviewsMap: any[]) {
-  const productIds = reviewsMap.map((review) => review.productId);
-  const uniqueProductIds = [...new Set(productIds)];
-  return uniqueProductIds;
+interface ProductReviewsMap {
+  [productId: string]: any[];
 }
 
-var filteredReviews = [];
+function groupReviewsByProduct(reviewsMap: any[]): ProductReviewsMap {
+  const productReviews: ProductReviewsMap = {};
+
+  reviewsMap.forEach((review) => {
+    const { productId } = review;
+    if (!productReviews[productId]) {
+      productReviews[productId] = [];
+    }
+    productReviews[productId].push(review);
+  });
+
+  return productReviews;
+}
 
 export const handler = async (event: any, context: any) => {
   try {
@@ -122,14 +119,13 @@ export const handler = async (event: any, context: any) => {
           };
         });
 
-        filteredReviews = getUniqueProductIds(reviewsMap);
-        console.log("Recently reviewed products:", filteredReviews);
+        const productReviewsMap: ProductReviewsMap =
+          groupReviewsByProduct(reviewsMap);
+        console.log("Product Reviews Map:", productReviewsMap);
 
-        return {
-          reviews: reviewsMap,
-          recentlyReviewedProducts: filteredReviews,
-        };
+        return productReviewsMap;
       })
+
       .catch(console.error);
 
     console.log(reviews);

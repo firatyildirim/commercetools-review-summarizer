@@ -44,12 +44,13 @@ const apiRoot = (0, platform_sdk_1.createApiBuilderFromCtpClient)(ctpClient).wit
 });
 function getFormattedTodayDate() {
     const today = new Date();
+    today.setDate(today.getDate() + 2);
     today.setUTCHours(0, 0, 0, 0);
     return today.toISOString();
 }
 function getFormattedYesterdayDate() {
     const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
+    yesterday.setDate(yesterday.getDate() - 3);
     yesterday.setUTCHours(0, 0, 0, 0);
     return yesterday.toISOString();
 }
@@ -81,6 +82,17 @@ function getUniqueProductIds(reviewsMap) {
     const uniqueProductIds = [...new Set(productIds)];
     return uniqueProductIds;
 }
+function groupReviewsByProduct(reviewsMap) {
+    const productReviews = {};
+    reviewsMap.forEach((review) => {
+        const { productId } = review;
+        if (!productReviews[productId]) {
+            productReviews[productId] = [];
+        }
+        productReviews[productId].push(review);
+    });
+    return productReviews;
+}
 var filteredReviews = [];
 const handler = (event, context) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -99,10 +111,14 @@ const handler = (event, context) => __awaiter(void 0, void 0, void 0, function* 
             });
             filteredReviews = getUniqueProductIds(reviewsMap);
             console.log("Recently reviewed products:", filteredReviews);
-            return {
-                reviews: reviewsMap,
-                recentlyReviewedProducts: filteredReviews,
-            };
+            // I need a json object that contains the product reviews under the product id
+            // return {
+            //   reviews: reviewsMap,
+            //   recentlyReviewedProducts: filteredReviews,
+            // };
+            const productReviewsMap = groupReviewsByProduct(reviewsMap);
+            console.log("Product Reviews Map:", productReviewsMap);
+            return productReviewsMap;
         })
             .catch(console.error);
         console.log(reviews);
