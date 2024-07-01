@@ -11,21 +11,23 @@
   "license": "ISC",
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/node": "^20.14.9",
     "@types/node-fetch": "^2.6.11",
     "typescript": "^5.4.5"
   },
   "dependencies": {
+    "@apollo/client": "^3.10.8",
     "@aws-sdk/client-lambda": "^3.600.0",
     "@commercetools/history-sdk": "^4.3.0",
     "@commercetools/importapi-sdk": "^5.4.0",
     "@commercetools/platform-sdk": "^7.9.0",
-    "@commercetools/sdk-client": "^3.0.0",
     "@commercetools/sdk-client-v2": "^2.5.0",
     "@commercetools/sdk-middleware-auth": "^7.0.1",
     "@commercetools/sdk-middleware-http": "^7.0.4",
     "@types/aws-lambda": "^8.10.140",
     "aws-sdk": "^2.1644.0",
     "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
     "node-fetch": "^2.6.11"
   }
 }
