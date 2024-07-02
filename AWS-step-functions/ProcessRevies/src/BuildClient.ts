@@ -1,15 +1,17 @@
-import fetch from "node-fetch";
+import fetch from 'node-fetch';
 import {
   ClientBuilder,
 
   // Import middlewares
   type AuthMiddlewareOptions, // Required for auth
   type HttpMiddlewareOptions, // Required for sending HTTP requests
-} from "@commercetools/sdk-client-v2";
-import { createApiBuilderFromCtpClient } from "@commercetools/platform-sdk";
-import "dotenv/config";
+} from '@commercetools/sdk-client-v2';
+import {
+  createApiBuilderFromCtpClient,
+} from '@commercetools/platform-sdk';
+import 'dotenv/config';
 
-const projectKey = process.env.CTP_PROJECT_KEY!;
+const projectKey = process.env.CTP_PROJECT_KEY!
 const clientID = process.env.CTP_CLIENT_ID!;
 const clientSecret = process.env.CTP_CLIENT_SECRET!;
 const scopes = [process.env.CTP_SCOPES!];
@@ -40,6 +42,5 @@ const ctpClient = new ClientBuilder()
   //.withLoggerMiddleware() // Include middleware for logging
   .build();
 
-export const apiRoot = createApiBuilderFromCtpClient(ctpClient).withProjectKey({
-  projectKey: projectKey,
-});
+export const apiRoot = createApiBuilderFromCtpClient(ctpClient)
+  .withProjectKey({ projectKey: projectKey });
