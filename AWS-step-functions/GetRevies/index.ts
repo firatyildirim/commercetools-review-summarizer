@@ -1,14 +1,8 @@
-import { ProductProjectionsSearchPaginationGql, MapProductsWithReviews } from "./src/ProductReviews";
+import { ProductProjectionsWithReviews } from "./src/ProductReviews";
 
 export const handler = async (event: any, context: any) => {
   try {
-
-    // Step 1 - Search all products with reviewRatingStatistics.count > 0 and has "product-review-summary" attribute if none of them has this attribute return all product ids with reviewRatings.count > 0
-    var allProducts = await ProductProjectionsSearchPaginationGql(10);
-
-    // Step 2 - Fetch and map product reviews 
-    let productsWithReviews = await MapProductsWithReviews(allProducts!, ["lastModifiedAt desc"]);
-
+    let productsWithReviews = await ProductProjectionsWithReviews(10);
     console.log("Products with Reviews:", productsWithReviews);
 
     if (!productsWithReviews) {
