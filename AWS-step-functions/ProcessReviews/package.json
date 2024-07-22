@@ -26,6 +26,7 @@
     "@types/aws-lambda": "^8.10.140",
     "aws-sdk": "^2.1644.0",
     "axios": "^1.7.2",
-    "node-fetch": "^2.6.11"
+    "node-fetch": "^2.6.11",
+    "openai": "^4.0.0"
   }
 }

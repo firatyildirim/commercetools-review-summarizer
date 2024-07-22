@@ -12,7 +12,7 @@
   "devDependencies": {
     "@types/axios": "^0.14.0",
     "@types/node-fetch": "^2.6.11",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.3"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.600.0",
@@ -24,7 +24,8 @@
     "@commercetools/sdk-middleware-auth": "^7.0.1",
     "@commercetools/sdk-middleware-http": "^7.0.4",
     "@types/aws-lambda": "^8.10.140",
-    "aws-sdk": "^2.1644.0",
+    "@types/node": "^20.14.11",
+    "aws-sdk": "^2.1659.0",
     "axios": "^1.7.2",
     "node-fetch": "^2.6.11"
   }
