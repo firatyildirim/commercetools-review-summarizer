@@ -2,7 +2,7 @@ import { APIGatewayProxyHandler } from "aws-lambda";
 import OpenAI from "openai";
 
 
-const key = process.env.OPENAI_API_KEY;
+
 const openai = new OpenAI();
 //GPT MODELS
 const GPT_3_5_TURBO = "gpt-3.5-turbo";
