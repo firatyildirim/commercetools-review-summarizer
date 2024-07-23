@@ -8,19 +8,18 @@ export const handler = async (event: any, context: any) => {
     if (!productsWithReviews) {
       return {
         statusCode: 404,
-        body: JSON.stringify({ message: 'No reviews found.' }),
+        body: JSON.stringify({ message: "No reviews found." }),
       };
     }
     return {
       statusCode: 200,
-      body: JSON.stringify(productsWithReviews),
+      body: JSON.stringify(productsWithReviews[0]),
     };
   } catch (error) {
-    console.error('Error fetching reviews:', error);
+    console.error("Error fetching reviews:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: 'Internal server error.' }),
+      body: JSON.stringify({ message: "Internal server error." }),
     };
   }
 };
-
