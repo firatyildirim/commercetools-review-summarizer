@@ -1,5 +1,6 @@
 import { APIGatewayProxyHandler } from "aws-lambda";
 import OpenAI from "openai";
+import { createOrUpdateProductReviewSummaryObject } from "./src/ProductReviewSummary";
 
 
 
@@ -34,7 +35,7 @@ When to use it: You use this role to set the stage for the interaction. For exam
 export const handler = async (event: any, context: any) => {
   if(event == null) return;
   const eventBody =JSON.parse(event.body);
-  const reviews = JSON.stringify(eventBody);
+  const reviews = JSON.stringify(eventBody.reviews);
   if(reviews == null) {
     return;
   }
@@ -55,6 +56,8 @@ export const handler = async (event: any, context: any) => {
 	  });
   
 	  console.log('GPT API response:', response);
+	  // Update product-review-summary object 
+	  // await createOrUpdateProductReviewSummaryObject(eventBody,response)
 	  return response;
     
 
@@ -74,10 +77,9 @@ Example JSON Object:
 
 [
   {
+	"title": "Süper bir ürün"
 	"score": 4,
-	"date": "12-04-2024",
-	"comment": "Ömürlük bir ürün. İnanılmaz süreler sıcak ve soğuk tutuyor. Her sene farklı markalardan işe yaramayan termos almaktansa tek seferde buna para verin :)",
-	"locale": "tr-TR"
+	"review": "Ömürlük bir ürün. İnanılmaz süreler sıcak ve soğuk tutuyor. Her sene farklı markalardan işe yaramayan termos almaktansa tek seferde buna para verin :)",
   }
 ]
 
