@@ -132,7 +132,7 @@ export async function productProjectionsWithReviews(reviewCountDifference: numbe
     const productsWithReviews = allProducts.map(product => ({
         ...product,
         reviews: mapReviews(allReviews
-            .filter(review => review.productId === product.id))
+            .filter(review => review.target.id === product.id))
     }));
 
     return productsWithReviews;
