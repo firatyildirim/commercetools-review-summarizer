@@ -35,13 +35,13 @@ When to use it: You use this role to set the stage for the interaction. For exam
 export const handler = async (event: any, context: any) => {
   if(event == null) return;
   const eventBody =JSON.parse(event.body);
-  const reviews = JSON.stringify(eventBody.reviews);
+  const reviews = JSON.stringify(eventBody[0].reviews);
   if(reviews == null) {
     return;
   }
   try {
     var response =   await openai.chat.completions.create({
-		model: GPT_3_5_TURBO,
+		model: GPT_4o,
 		max_tokens:150,//to be calculated and determined
     	temperature:1, // Use the appropriate model
 		messages: [
@@ -54,11 +54,16 @@ export const handler = async (event: any, context: any) => {
 		  }
 		],
 	  });
-  
-	  console.log('GPT API response:', response);
+	var contentFromResponse = response.choices[0].message.content;
+	if(contentFromResponse !=  null){
+		var parsedContent = JSON.parse(contentFromResponse)
+		console.log('GPT API response:', parsedContent);
+		return parsedContent;
+
+	}
+	
 	  // Update product-review-summary object 
 	  // await createOrUpdateProductReviewSummaryObject(eventBody,response)
-	  return response;
     
 
   } catch (error : any) {
@@ -76,11 +81,16 @@ const SYSTEM_CONTENT2=`You are a bot designed to process and summarize product r
 Example JSON Object:
 
 [
-  {
-	"title": "Süper bir ürün"
-	"score": 4,
-	"review": "Ömürlük bir ürün. İnanılmaz süreler sıcak ve soğuk tutuyor. Her sene farklı markalardan işe yaramayan termos almaktansa tek seferde buna para verin :)",
-  }
+   {
+          "title": "Not the best insulation",
+          "review": "While it does keep my coffee warm, it doesn't stay hot as long as I expected.",
+          "score": 3
+	},
+	{
+          "title": "Nicht die beste Isolierung",
+          "review": "Obwohl er meinen Kaffee warm hält, bleibt er nicht so lange heiß, wie ich erwartet habe.",
+          "score": 3
+    }
 ]
 
 Summarize these comments into three categories: “common positive comment”, “common negative comments”, “notable observation”. The summaries shouldn't exceed 3 sentences.
@@ -89,11 +99,17 @@ Translate the generated summaries to these languages [tr-TR, en-US, fr-FR, de-DE
 
 Do not take any discriminative, rude and bad comments to summary as a parameter.
 
-The output must be a JSON object as shown below, with "average-score" as a floating number with two decimal points and all other values as strings:
+The output must be a JSON object as shown below, with "average-score" as a floating number with two decimal points and all other values as strings.Do not stringify the JSON response.Do not add any spacing to JSON response:
 
 {
 	"average-score": double .2f,
-	"summary": "string",
+	"summary": {
+		"tr-TR": "string",
+		"en-US": "string",
+		"fr-FR": "string",
+		"de-DE": "string",
+		"nl-NL": "string"
+	},
 	"common-positive": {
 		"tr-TR": "string",
 		"en-US": "string",
