@@ -6,7 +6,7 @@
     "strict": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./",   // Specify root directory as output directory
+    "outDir": "./dist",  // Specify root directory as output directory
     "rootDir": "./"   // Specify root directory of TypeScript source files
   },
   "include": [

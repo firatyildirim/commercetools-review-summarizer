@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "postbuild": "7z a -r release.zip ./dist/* ./node_modules"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +15,7 @@
     "@types/axios": "^0.14.0",
     "@types/node": "^20.14.9",
     "@types/node-fetch": "^2.6.11",
+    "cpy-cli": "^5.0.0",
     "typescript": "^5.4.5"
   },
   "dependencies": {
