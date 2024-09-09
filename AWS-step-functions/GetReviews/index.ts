@@ -13,10 +13,13 @@ export const handler = async (event: any, context: any) => {
         body: JSON.stringify({ message: 'No reviews found.' }),
       };
     }
-    return {
-      statusCode: 200,
-      body: JSON.stringify(productsWithReviews),
-    };
+    productsWithReviews.forEach((reviewObject:any) => {
+      return {
+        statusCode: 200,
+        body: JSON.stringify(reviewObject),
+      };
+    })
+    
   } catch (error) {
     console.error('Error fetching reviews:', error);
     return {

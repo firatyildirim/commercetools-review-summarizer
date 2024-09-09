@@ -9,9 +9,7 @@ export const handler: APIGatewayProxyHandler = async (event, context) => {
       body: JSON.stringify({ message: "Invalid input" }),
     };
   }
-
   try {
-    
     var eventBody = getEventBody(event);
     var reviews = eventBody.reviews;
     var productId = eventBody.id;

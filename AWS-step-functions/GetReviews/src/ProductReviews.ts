@@ -45,11 +45,11 @@ const productProjectionsWithReviewCriteria = (products: Product[], reviewCountDi
 
             return (
                 product.reviewRatingStatistics.count + reviewCountDifference > productReviewSummary.referencedResource.value.totalReviewCount ||
-                product.reviewRatingStatistics.averageRating !== productReviewSummary.referencedResource.value.lastAvaragePoint
+                parseFloat(product.reviewRatingStatistics.averageRating.toFixed(2)) !== productReviewSummary.referencedResource.value.lastAvaragePoint
             );
         }
 
-        return false;
+        return product;
     });
 
     // If no products with "product-review-summary" attribute, include all products

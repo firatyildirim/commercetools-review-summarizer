@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "deploy": "zip -r reviews.zip ./* && aws lambda update-function-code --function-name ct-ai-step-get-reviews --zip-file fileb://reviews.zip"
+    "postbuild": "7z a -r release.zip ./dist/* ./node_modules"
   },
   "keywords": [],
   "author": "",
