@@ -5,6 +5,7 @@ mutation CreateOrUpdateCustomObject($draft: CustomObjectDraft!) {
   createOrUpdateCustomObject(draft: $draft) {
     version
     id
+    key
     lastModifiedAt
     container
     value

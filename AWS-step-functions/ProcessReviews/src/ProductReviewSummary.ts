@@ -1,4 +1,4 @@
-import { CustomObjectDraft, Product } from "@commercetools/platform-sdk";
+import { CustomObjectDraft, Product, ProductUpdateAction } from "@commercetools/platform-sdk";
 import { apiRoot } from "./BuildClient";
 import { CreateOrUpdateCustomObject } from "./GraphqlQueries";
 
@@ -25,60 +25,78 @@ const executeGqlQuery = async (query: any, variables: any) => {
 };
 
 export const createOrUpdateProductReviewSummaryObject = async (
-    productID: string,
+    product: Product | any,
     summaryOfReview: any,
     isConfirmed: boolean,
     totalReviewCount: number,
     lastAveragePoint: number
 ): Promise<any> => {
     const valueObject = {
-        productId: productID,
+        productId: product.id,
         isConfirmed: isConfirmed,
         summaryOfReview: generateSummaryModel(summaryOfReview),
-        totalReviewCount: totalReviewCount,
-        lastAveragePoint: lastAveragePoint
+        totalReviewCount: totalReviewCount, // product.reviewRatingStatistics!.count,
+        lastAveragePoint: lastAveragePoint  // product.reviewRatingStatistics!.averageRating
     };
-    console.log("valueObject",JSON.stringify(valueObject))
+
     const variables = {
         draft: {
             container: reviewSummaryAttribute,
-            key: productID,
+            key: product.id,
             value: JSON.stringify(valueObject)
         }
     };
     return await executeGqlQuery(CreateOrUpdateCustomObject, variables);
 };
 
-function generateSummaryModel(summaryOfReview: string) {
-    var parsedSummary = JSON.parse(summaryOfReview);
+const generateSummaryModel = (summaryOfReview: any) => {
+    summaryOfReview = JSON.parse(summaryOfReview);
     return {
         summary: {
-            tr: parsedSummary.summary.tr || null,
-            en: parsedSummary.summary.en || null,
-            fr: parsedSummary.summary.fr || null,
-            de: parsedSummary.summary.de || null,
-            nl: parsedSummary.summary.nl || null
+            tr: summaryOfReview.summary.tr || null,
+            en: summaryOfReview.summary.en || null,
+            fr: summaryOfReview.summary.fr || null,
+            de: summaryOfReview.summary.de || null,
+            nl: summaryOfReview.summary.nl || null
         },
         commonPositive: {
-            tr: parsedSummary.commonPositive.tr || null,
-            en: parsedSummary.commonPositive.en || null,
-            fr: parsedSummary.commonPositive.fr || null,
-            de: parsedSummary.commonPositive.de || null,
-            nl: parsedSummary.commonPositive.nl || null
+            tr: summaryOfReview.commonPositive.tr || null,
+            en: summaryOfReview.commonPositive.en || null,
+            fr: summaryOfReview.commonPositive.fr || null,
+            de: summaryOfReview.commonPositive.de || null,
+            nl: summaryOfReview.commonPositive.nl || null
         },
         commonNegative: {
-            tr: parsedSummary.commonNegative.tr || null,
-            en: parsedSummary.commonNegative.en || null,
-            fr: parsedSummary.commonNegative.fr || null,
-            de: parsedSummary.commonNegative.de || null,
-            nl: parsedSummary.commonNegative.nl || null
+            tr: summaryOfReview.commonNegative.tr || null,
+            en: summaryOfReview.commonNegative.en || null,
+            fr: summaryOfReview.commonNegative.fr || null,
+            de: summaryOfReview.commonNegative.de || null,
+            nl: summaryOfReview.commonNegative.nl || null
         },
         noteableObservation: {
-            tr: parsedSummary.noteableObservation.tr || null,
-            en: parsedSummary.noteableObservation.en || null,
-            fr: parsedSummary.noteableObservation.fr || null,
-            de: parsedSummary.noteableObservation.de || null,
-            nl: parsedSummary.noteableObservation.nl || null
+            tr: summaryOfReview.noteableObservation.tr || null,
+            en: summaryOfReview.noteableObservation.en || null,
+            fr: summaryOfReview.noteableObservation.fr || null,
+            de: summaryOfReview.noteableObservation.de || null,
+            nl: summaryOfReview.noteableObservation.nl || null
         }
     };
 };
+
+export const updateProductReviewSummaryAttribute = async (customObjectId:string, product:Product|any) => {
+    const updateAction: ProductUpdateAction = {
+        action: 'setAttributeInAllVariants',
+        name: reviewSummaryAttribute,
+        value:{
+            typeId: "key-value-document",
+            id: customObjectId
+        }
+    }
+
+    return await apiRoot.products().withId({ID: product.id}).post({
+        body: {
+            version: product.version,
+            actions: [updateAction]
+        }
+    }).execute();
+}

@@ -31,6 +31,10 @@ const productProjectionsSearchGql = async (limit = 500, offset = 0): Promise<any
     return await executeGqlQuery(ProductProjectionSearch, variables);
 }
 
+const parseFloatToFixedTwo = (number: number): any => {
+    return parseFloat(number.toFixed(2));
+}
+
 const productProjectionsWithReviewCriteria = (products: Product[], reviewCountDifference: number): Product[] => {
     // Filter products with the "product-review-summary" attribute and matching criteria
     let filteredProducts = products.filter((product: any) => {
@@ -44,8 +48,8 @@ const productProjectionsWithReviewCriteria = (products: Product[], reviewCountDi
             );
 
             return (
-                product.reviewRatingStatistics.count + reviewCountDifference > productReviewSummary.referencedResource.value.totalReviewCount ||
-                parseFloat(product.reviewRatingStatistics.averageRating.toFixed(2)) !== productReviewSummary.referencedResource.value.lastAvaragePoint
+                product.reviewRatingStatistics.count > productReviewSummary.referencedResource.value.totalReviewCount + reviewCountDifference ||
+                parseFloatToFixedTwo(product.reviewRatingStatistics.averageRating) !== parseFloatToFixedTwo(productReviewSummary.referencedResource.value.lastAveragePoint)
             );
         }
 
@@ -60,7 +64,7 @@ const productProjectionsWithReviewCriteria = (products: Product[], reviewCountDi
 }
 
 const mapProducts = (products: Product[]): any[] => {
-    return products.map(product => ({ id: product.id }))
+    return products.map(product => ({ id: product.id, version:product.version, reviewRatingStatistics : product.reviewRatingStatistics }))
 }
 
 const fetchProductProjectionsSearchPaginationGql = async (reviewCountDifference: number, limit = 500): Promise<any[]> => {
@@ -93,7 +97,7 @@ const fetchProductReviewsGql = async (products: Product[], sort: string[] = [], 
         sort,
         limit,
         offset,
-        where: `target(typeId="product" and id in (${formatProductIdsForGql(products)}))`
+        where: products.length > 0 ? `target(typeId="product" and id in (${formatProductIdsForGql(products)}))` : 'target(typeId="product")'
     };
 
     return await executeGqlQuery(Reviews, variables);
@@ -125,15 +129,44 @@ const fetchProductReviewsPaginationGql = async (products: Product[], sort: strin
     return allReviews;
 }
 
-export async function productProjectionsWithReviews(reviewCountDifference: number): Promise<any[]> {
+const estimateSizeInKB = <T>(param: T): number => {
+    const jsonString = JSON.stringify(param);
+    const bytes = new TextEncoder().encode(jsonString).length;
+    return bytes / 1024;
+}
+
+const paginateBasedOnSize = (data: any[], pageSize: number): any[] => {
+    let result = [];
+    let currentPage:any = [];
+
+    data.forEach((item,i) => {
+        currentPage.push(item);
+        if (estimateSizeInKB(currentPage) > pageSize) {
+            currentPage.pop();
+            result.push(currentPage);
+            currentPage = [item];
+        }
+    });
+
+    if (currentPage.length) 
+        result.push(currentPage);
+    return result;
+}
+
+export const productProjectionsWithReviews = async (reviewCountDifference: number, pageSize: number): Promise<any[]> => {
     const allProducts = await fetchProductProjectionsSearchPaginationGql(reviewCountDifference);
     const allReviews = await fetchProductReviewsPaginationGql(allProducts);
 
-    const productsWithReviews = allProducts.map(product => ({
+    let productsWithReviews = allProducts.map(product => ({
         ...product,
         reviews: mapReviews(allReviews
             .filter(review => review.target.id === product.id))
     }));
+
+    const sizeInKB = estimateSizeInKB(productsWithReviews);
+    if (sizeInKB > pageSize) {
+        productsWithReviews = paginateBasedOnSize(productsWithReviews, pageSize);
+    }
 
     return productsWithReviews;
 }

@@ -1,10 +1,10 @@
 import { productProjectionsWithReviews } from "./src/ProductReviews";
 
 export const handler = async (event: any, context: any) => {
+  const reviewCountDifference = 10;
+  const pageSizeKB=256;
   try {
-
-    // Customers query will be changed to get reviews query from Deniz
-    let productsWithReviews = await productProjectionsWithReviews(10);
+    let productsWithReviews = await productProjectionsWithReviews(reviewCountDifference, pageSizeKB);
     console.log("Products with Reviews:", productsWithReviews);
 
     if (!productsWithReviews) {
@@ -13,13 +13,10 @@ export const handler = async (event: any, context: any) => {
         body: JSON.stringify({ message: 'No reviews found.' }),
       };
     }
-    productsWithReviews.forEach((reviewObject:any) => {
-      return {
-        statusCode: 200,
-        body: JSON.stringify(reviewObject),
-      };
-    })
-    
+    return {
+      statusCode: 200,
+      body: productsWithReviews,
+    };
   } catch (error) {
     console.error('Error fetching reviews:', error);
     return {

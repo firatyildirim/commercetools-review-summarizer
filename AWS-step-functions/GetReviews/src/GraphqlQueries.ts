@@ -8,6 +8,7 @@ query ProductProjectionSearch($limit: Int, $offset: Int, $filters: [SearchFilter
     total
     results {
       id
+      version
       masterVariant {
         attributesRaw(includeNames: $includeNames) {
           name

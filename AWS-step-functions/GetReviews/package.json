@@ -4,9 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc && node dist/testHelper/test.js",
     "build": "tsc",
-    "postbuild": "7z a -r release.zip ./dist/* ./node_modules"
+    "postbuild": "7z a -r ./release/release.zip ./dist/* ./node_modules",
+    "zip:win": "7z a -r ./release/release.zip ./dist/* ./node_modules",
+    "zip:mac": "zip -r ./release/release.zip ./dist/* ./node_modules",
+    "deploy": "zip -r ./release/release.zip ./* && aws lambda update-function-code --function-name ct-ai-step-get-reviews --zip-file fileb://./release/release.zip",
+    "myDeploy": "npm run build && npm run zip:win && aws lambda update-function-code --function-name GetReviews --zip-file fileb://./release/release.zip"
   },
   "keywords": [],
   "author": "",
