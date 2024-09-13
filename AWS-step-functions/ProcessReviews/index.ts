@@ -1,5 +1,5 @@
 import { sendReviewsToGPT } from "./src/OpenAI";
-import { createOrUpdateProductReviewSummaryObject } from "./src/ProductReviewSummary";
+import { createOrUpdateProductReviewSummaryObject, updateProductReviewSummaryAttribute } from "./src/ProductReviewSummary";
 import "dotenv/config";
 
 export const handler = async (event: any, context: any) => {
@@ -51,9 +51,12 @@ export const handler = async (event: any, context: any) => {
       };
     }
 
+    const setReviewSummaryAttributeResponse = await updateProductReviewSummaryAttribute(updateProductReviewSummaryResponse.body.data.createOrUpdateCustomObject.id, product)
+    console.log("setReviewSummaryAttributeResponse:",setReviewSummaryAttributeResponse);
+
     return {
       statusCode: 200,
-      body: JSON.stringify(updateProductReviewSummaryResponse),
+      body: JSON.stringify(setReviewSummaryAttributeResponse),
     };
 
   } catch (error: any) {
